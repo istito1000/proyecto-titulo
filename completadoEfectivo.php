@@ -1,43 +1,29 @@
 <?php
+
 require 'config/config.php';
 require 'config/database.php';
 $db = new Database();
 $con = $db->conectar();
 
-$id_transaccion = isset($_GET['key']) ? $_GET['key'] : 0;
-$error = '';
+$productos = isset($_SESSION['carrito']['productos']) ? $_SESSION['carrito']['productos'] : null;
 
-if ($id_transaccion == 1) {
-    $sql = $con->prepare("SELECT count(id) FROM compra WHERE id_transaccion=? AND status=?");
-    $sql->execute([$id_transaccion, 'COMPLETED']);
 
-    if ($sql->fetchColumn() == 0) {
-        $sql = $con->prepare("SELECT id, fecha, correo,total FROM compra WHERE id_transaccion=? 
-        AND status=? LIMIT 1");
-        $sql->execute([$id_transaccion, 'PROCESANDO']);
-        $row = $sql->fetch(PDO::FETCH_ASSOC);
+$lista_carrito = array();
 
-        if ($row) {
-            $id_compra = $row['id'];
-            $total = $row['total'];
-            $fecha = $row['fecha'];
 
-            $sqlDet = $con->prepare("SELECT nombre, precio, cantidad from detalle_compra WHERE id_compra = ?");
-            $sqlDet->execute([$id_compra]);
+if ($productos != null) {
+    foreach ($productos as $clave=> $cantidad) {
+        $sql = $con->prepare("SELECT id,nombre,precio, $cantidad AS cantidad FROM productos WHERE id=? AND activo=1 ");
+        $sql->execute([$clave]);
+        $lista_carrito[] = $sql->fetch(PDO::FETCH_ASSOC);
 
-            // Verifica si hay resultados antes de usar fetch en $sqlDet
-            if ($sqlDet) {
-                // Resto de tu código para mostrar los detalles de compra
-            } else {
-                $error = 'Error al obtener los detalles de la compra';
-            }
-        } else {
-            $error = 'Error al obtener información de la compra';
-        }
-    } else {
-        $error = 'No se encontró la transacción';
+
     }
-}
+}else{
+    header("Location: index.php");
+    exit;
+}   
+
 ?>
 
 <!DOCTYPE html>
@@ -62,41 +48,72 @@ if ($id_transaccion == 1) {
 <br>
     <main> 
         <div class="container">
-        <?php if(strlen($error) > 0) { ?>
+
             <div class="row">
                 <div class="col">
-                    <h3><?php echo $error;?></h3>
                 </div>
-            </div>
-
-            <?php }else { ?>
-    
+            </div> 
             <div class="row">
                 <div class="col">
                     <table class="table ">
-                        <thead>
-                            <tr>
-                                <b>Comprobante de compra:</b><?php echo $id_transaccion;?><br>
-                                <b>Fecha:</b><?php date_default_timezone_set('America/Santiago');echo "". date("d/m/Y") . " hora: ". date("h:i:sa");?><br>
-                                <b>Total:</b><?php echo MONEDA.$total;?><br>
-                                <b>Tiempo estimado de entrega: 15-20 minutos</b>
-                                <th>Cantidad</th>
-                                <th>Producto</th>
-                                <th>Total del producto</th>
-                            </tr>
-                        </thead>
-
                         <tbody>
+                            <thead>
                                 <tr>
-                                    <td><?php echo $row_det['cantidad'];?></td>
-                                    <td><?php echo $row_det['nombre'];?></td>
-                                    <td><?php echo $row_det['precio']* $row_det['cantidad'];?></td>
+                                    <th>Cantidad</th>
+                                    <th>Producto</th>
+                                    <th>Total del producto</th>
+                                </tr>
+                            </thead>
+                                <tr>
+                                <?php if ($lista_carrito == null) {
+                                    echo '<tr><td colspan="5" class = "text-center"><b>Lista vacia </b></td></tr>';
+                                } else {
+                                    $total = 0;
+                                    foreach ($lista_carrito as $producto) {
+                                        $longitud = 10; // Puedes ajustar la longitud según tus necesidades
+                                        $bytes_aleatorios = random_bytes($longitud);
+                                        $codigo_aleatorio = bin2hex($bytes_aleatorios);
+                                        $_id = $producto['id'];
+                                        $nombre = $producto['nombre'];
+                                        $precio = $producto['precio'];
+                                        $cantidad = $producto['cantidad'];
+                                        $subtotal = $cantidad * $precio;
+                                        $total +=$subtotal ;
+                                    ?>                           
+                                <tr>
+                                    <td>
+                                    <div id="cantidad_<?php echo $_id; ?>" name="cantidad[]"><?php echo $cantidad; ?></div>
+                                        
+                                    </td>
+
+                                    <td>    
+                                        <?php echo $nombre?>              
+                                    </td>
+                                        
+                                    <td>
+                                        <div id="subtotal_<?php echo $_id; ?>" name="subtotal[]"><?php echo MONEDA .$subtotal; ?></div>
+                                    </td>
+
+                                </tr>
+                                
+                            
+                                <?php } ?>
                                 </tr>
 
                         </tbody>
                     </table>
+
+                    <thead>
+                            <tr>
+                                <b>Comprobante de compra:</b><?php echo $codigo_aleatorio;?><br>
+                                <b>Fecha:</b><?php date_default_timezone_set('America/Santiago');echo "". date("d/m/Y");?><br>
+                                <b>Hora:</b><?php echo "". date("h:i:sa");?><br>
+                                <b>Total:</b><?php echo MONEDA.$total;?><br>
+                                <b>Tiempo estimado de entrega: 15-20 minutos</b><br>
+                            </tr>
+                        </thead>
                 </div>
-            <?php } ?>
+                <?php } ?>
         </div>
     </main>
     

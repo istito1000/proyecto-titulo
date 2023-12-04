@@ -59,7 +59,10 @@ if ($productos != null) {
                     <br>
                     <div id="paypal-button-container"></div>
                     <div>
-                    <a class="btn btn-primary" href="completadoEfectivo.php" >Efectivo</a>
+                    <a class="btn btn-primary" style="width: 100%;" href="completadoEfectivo.php">Efectivo</a>
+
+
+
 
 
                     </div>

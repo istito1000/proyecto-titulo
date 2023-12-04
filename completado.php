@@ -75,7 +75,8 @@ if($id_transaccion == 0){
                         <thead>
                             <tr>
                                 <b>Comprobante de compra:</b><?php echo $id_transaccion;?><br>
-                                <b>Fecha:</b><?php date_default_timezone_set('America/Santiago');echo "". date("d/m/Y") . " hora: ". date("h:i:sa");?><br>
+                                <b>Fecha:</b><?php date_default_timezone_set('America/Santiago');echo "". date("d/m/Y");?><br>
+                                <b>Hora:</b><?php echo "". date("h:i:sa");?><br>
                                 <b>Total:</b><?php echo MONEDA.$total;?><br>
                                 <b>Tiempo estimado de entrega: 15-20 minutos</b>
                                 <th>Cantidad</th>
@@ -102,5 +103,3 @@ if($id_transaccion == 0){
     
 </body>
 </html>
-
-                    
