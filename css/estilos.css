@@ -1,0 +1,15 @@
+main > .container{
+    padding: 70px 0;
+    border-radius: 20px;
+}
+
+/* Agrega este código en tu archivo de estilos CSS (estilos.css) o en el bloque <style> dentro del <head> de tu HTML */
+.col {
+    width: 20px; /* Define el ancho de cada columna */
+}
+
+.card {
+    width: 10%; /* Haz que la tarjeta ocupe todo el ancho del contenedor .col */
+    height: 3300px; /* Define la altura de cada tarjeta */
+}
+
