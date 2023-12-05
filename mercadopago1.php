@@ -1,39 +1,68 @@
 <?php
-// Incluye la SDK de MercadoPago
-require 'vendor/autoload.php'; // Ajusta la ruta correcta hacia autoload.php
+require 'vendor/autoload.php';
+use MercadoPago\Client\Preference\PreferenceClient;
+use MercadoPago\MercadoPago;
+use MercadoPago\MercadoPagoConfig;
 
-// Configura el Access Token de MercadoPago
-MercadoPago\SDK::setAccessToken("TU_ACCESS_TOKEN");
+MercadoPagoConfig::setAccessToken("TEST-5620071132151801-110811-21bf02f64693ed4a0a12cea3a4994cd0-241483663");
 
-// Crea la preferencia de pago
-$preference = new MercadoPago\Preference();
+$client = new PreferenceClient();
+$preference = $client->create([
+    "items"=> [
+        [
+            "title" => "Producto 1",
+            "quantity" => 1,
+            "currency_id" => "CLP",
+            "unit_price" => 13900
+        ]
+    ],
+    "back_urls" => [
+        "success" => "http://localhost/definitivo/captura.php",
+        "failure" => "http://localhost/definitivo/fallo.php",
+    ],
+    "auto_return" => "approved",
+    "binary_mode" => true
+]);
 
-// Crea un ítem para la compra
-$item = new MercadoPago\Item();
-$item->title = "Producto Ejemplo";
-$item->quantity = 1;
-$item->unit_price = 100; // El precio en la moneda especificada por MercadoPago
-$item->currency_id = "USD"; // La moneda en la que se realiza la transacción
+$preferenceId = $preference->id;
 
-// Agrega el ítem a la preferencia
-$preference->items = array($item);
-
-// Guarda la preferencia
-$preference->save();
-
+ // Aquí deberías acceder directamente al atributo 'id' que contiene el ID de la preferencia        
 ?>
 
+
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Pago con MercadoPago</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JoseGasam</title>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
 </head>
-<body>
 
-<!-- Botón de pago -->
-<a href="<?php echo $preference->sandbox_init_point; ?>" name="MP-Checkout" class="btn btn-primary">Pagar con MercadoPago</a>
-<script src="https://www.mercadopago.com/v2/security.js" view="home"></script>
+<body>
+    <div id="wallet_container"></div>
+
 
 </body>
+<script>
+    const mp = new MercadoPago('TEST-3c41cc32-2cbd-42ad-82c5-c8ee9f4173ed');
+    const bricksBuilder = mp.bricks();
+
+        
+    mp.bricks().create("wallet", "wallet_container", {
+    initialization: {
+        preferenceId: "<?php echo $preferenceId; ?>",
+    },
+    customization: {
+       checkout: {
+           theme: {
+               elementsColor: "#4287F5",
+               headerColor: "#4287F5",
+           },
+       },
+   },
+});
+
+</script>
 </html>
+

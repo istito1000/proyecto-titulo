@@ -1,13 +1,14 @@
 <?php
 // Importar la SDK de MercadoPago
-require __DIR__ .  '/vendor/autoload.php'; // Asegúrate de que la ruta sea correcta
+require 'vendor/autoload.php';
+ // Asegúrate de que la ruta sea correcta
 
 // Resto de tu código...
 
 
 //holaperrooo
 
-MercadoPago\SDK::setAccessToken("TEST-27191301-4365146-2535599");
+MercadoPago\SDK::setAccessToken("TEST-5620071132151801-110811-21bf02f64693ed4a0a12cea3a4994cd0-241483663");
 
 $preference = new MercadoPago\Preference();
 
