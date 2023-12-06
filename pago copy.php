@@ -2,6 +2,14 @@
 
 require 'config/config.php';
 require 'config/database.php';
+require 'vendor/autoload.php';
+
+use MercadoPago\Client\Preference\PreferenceClient;
+use MercadoPago\MercadoPago;
+use MercadoPago\MercadoPagoConfig;
+MercadoPagoConfig::setAccessToken("TEST-5620071132151801-110811-21bf02f64693ed4a0a12cea3a4994cd0-241483663");
+
+
 $db = new Database();
 $con = $db->conectar();
 
@@ -24,29 +32,28 @@ if ($productos != null) {
     exit;
 }   
 
-require 'vendor/autoload.php';
-use MercadoPago\Client\Preference\PreferenceClient;
-use MercadoPago\MercadoPago;
-use MercadoPago\MercadoPagoConfig;
 
-MercadoPagoConfig::setAccessToken("TEST-5620071132151801-110811-21bf02f64693ed4a0a12cea3a4994cd0-241483663");
+$total = 0;
+foreach ($lista_carrito as $producto) {
+    $_id = $producto['id'];
+    $nombre = $producto['nombre'];
+    $precio = $producto['precio'];
+    $cantidad = $producto['cantidad'];
+    $subtotal = $cantidad * $precio;
+    $total +=$subtotal ;
+
+
+}
 
 $client = new PreferenceClient();
 $preference = $client->create([
     "items"=> [
         [
-            "title" => "Producto 1",
-            "quantity" => 1,
-            "currency_id" => "CLP",
-            "unit_price" => 13900
+            "title" => $nombre,
+            "quantity" => 1,        
+            "unit_price" => $total
         ]
     ],
-    "back_urls" => [
-        "success" => "http://localhost/definitivo/captura.php",
-        "failure" => "http://localhost/definitivo/fallo.php",
-    ],
-    "auto_return" => "approved",
-    "binary_mode" => true
 ]);
 
 $preferenceId = $preference->id;
@@ -77,9 +84,6 @@ $preferenceId = $preference->id;
 
     <main> 
         <div class="container">   
-           
-            
-
             <div class="row">
                 <div class="col-6">
                     <h1>Metodos de pago</h1>
@@ -113,6 +117,7 @@ $preferenceId = $preference->id;
                                         $cantidad = $producto['cantidad'];
                                         $subtotal = $cantidad * $precio;
                                         $total +=$subtotal ;
+
                                     ?>                           
                                 <tr>
                                     <td>

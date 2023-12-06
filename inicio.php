@@ -29,7 +29,7 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.118.2">
     <title>Inicio-Jose gasam</title>
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/carousel/">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     
@@ -142,7 +142,7 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
     <link href="carousel.css" rel="stylesheet">
   </head>
   <body>
-  <?php include 'menu.php';?>
+    <?php include 'menu.php';?>
 
 <br>
 <main>
@@ -157,7 +157,7 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
     <!-- Three columns of text below the carousel -->
     <div class="row">
       <div class="col-lg-6">
-      <img src="img/abastibleRegistro.png" alt="" width="300" height="300">
+      <img src="img/camiones.jpg" alt="" width="400" height="300">
         <h2 class="fw-normal">¿Quienes somos?</h2>
         <p>Somos una pequeña pyme de venta de cilindros de gas.</p>
         <p><a class="btn btn-primary" href="sobre_nosotros.php">Ver detalles &raquo;</a></p>

@@ -22,12 +22,12 @@
                         <a href="sobre_nosotros.php" class="nav-link active">Sobre nosotros</a>
                     </li>
                 </ul>
-                <a href="checkout.php" class="btn btn-primary btn-sm me-2">Carrito 
+                <a href="checkout.php" class="btn btn-primary btn-sm me-2"><i class="bi bi-bag-fill">&nbsp;</i>Carrito 
                     <span id="num_cart" class="badge bg-secondary"><?php echo $num_cart; ?></span>
                 </a>
                 <?php if(isset($_SESSION['user_id'])){ ?>
                     <div class="dropdown">
-                        <button class="btn btn-success btn-sm dropdown-toggle" id="btn_session"  type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn btn-success btn-sm dropdown-toggle" id="btn_session"  type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-fill"></i>
                             &nbsp;<?php echo $_SESSION['user_name']; ?>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="btn_session">

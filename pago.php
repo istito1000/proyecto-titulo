@@ -2,6 +2,14 @@
 
 require 'config/config.php';
 require 'config/database.php';
+require 'vendor/autoload.php';
+
+use MercadoPago\Client\Preference\PreferenceClient;
+use MercadoPago\MercadoPago;
+use MercadoPago\MercadoPagoConfig;
+MercadoPagoConfig::setAccessToken("TEST-5620071132151801-110811-21bf02f64693ed4a0a12cea3a4994cd0-241483663");
+
+
 $db = new Database();
 $con = $db->conectar();
 
@@ -23,6 +31,32 @@ if ($productos != null) {
     header("Location: index.php");
     exit;
 }   
+
+
+$total = 0;
+foreach ($lista_carrito as $producto) {
+    $_id = $producto['id'];
+    $nombre = $producto['nombre'];
+    $precio = $producto['precio'];
+    $cantidad = $producto['cantidad'];
+    $subtotal = $cantidad * $precio;
+    $total +=$subtotal ;
+
+
+}
+
+$client = new PreferenceClient();
+$preference = $client->create([
+    "items"=> [
+        [
+            "title" => $nombre,
+            "quantity" => 1,        
+            "unit_price" => $total
+        ]
+    ],
+]);
+
+$preferenceId = $preference->id;
 
 ?>
 
@@ -50,21 +84,14 @@ if ($productos != null) {
 
     <main> 
         <div class="container">   
-           
-            
-
             <div class="row">
                 <div class="col-6">
                     <h1>Metodos de pago</h1>
                     <br>
                     <div id="paypal-button-container"></div>
+                    <div id="wallet_container"></div>
                     <div>
-                    <a class="btn btn-primary" style="width: 100%;" href="completadoEfectivo.php">Efectivo</a>
-
-
-
-
-
+                        <a class="btn btn-primary" style="width: 100%;" href="completadoEfectivo.php">Efectivo</a>
                     </div>
                 </div>
 
@@ -90,6 +117,7 @@ if ($productos != null) {
                                         $cantidad = $producto['cantidad'];
                                         $subtotal = $cantidad * $precio;
                                         $total +=$subtotal ;
+
                                     ?>                           
                                 <tr>
                                     <td>
@@ -130,7 +158,8 @@ if ($productos != null) {
       
 </body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    <script src="https://www.paypal.com/sdk/js?client-id=<?php echo CLIENTE_ID; ?>&currency=<?php echo CURRENCY; ?> "></script>        
+    <script src="https://www.paypal.com/sdk/js?client-id=<?php echo CLIENTE_ID; ?>&currency=<?php echo CURRENCY; ?> "></script>      
+    <script src="https://sdk.mercadopago.com/js/v2"></script>  
     <script>
         paypal.Buttons({
             style: {
@@ -176,6 +205,20 @@ if ($productos != null) {
             }
 
         }).render('#paypal-button-container');
+    </script>
+
+    <script>
+
+        const mp = new MercadoPago('TEST-3c41cc32-2cbd-42ad-82c5-c8ee9f4173ed');
+        const bricksBuilder = mp.bricks();
+
+            
+        mp.bricks().create("wallet", "wallet_container", {
+        initialization: {
+        preferenceId: "<?php echo $preferenceId; ?>",
+        },
+        });
+
     </script>
     
     
