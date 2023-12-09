@@ -158,14 +158,14 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
     <div class="row">
       <div class="col-lg-6">
       <img src="img/camiones.jpg" alt="" width="400" height="300">
-        <h2 class="fw-normal">¿Quienes somos?</h2>
+        <h2 class="fw-normal">¿Quiénes somos?</h2>
         <p>Somos una pequeña pyme de venta de cilindros de gas.</p>
         <p><a class="btn btn-primary" href="sobre_nosotros.php">Ver detalles &raquo;</a></p>
       </div><!-- /.col-lg-4 -->
       <div class="col-lg-6">
       <img src="img/SanBernardo.gif" alt="" width="300" height="300">
-        <h2 class="fw-normal">¿Donde nos ubicamos?</h2>
-        <p>Esta pyme esta ubicada en la comuna de san bernardo.</p>
+        <h2 class="fw-normal">¿Dónde nos ubicamos?</h2>
+        <p>Esta pyme esta ubicada en la comuna de San Bernardo.</p>
         <p><a class="btn btn-primary" href="sobre_nosotros.php">Ver detalles &raquo;</a></p>
       </div><!-- /.col-lg-4 -->
 

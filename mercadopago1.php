@@ -1,32 +1,39 @@
 <?php
-require 'vendor/autoload.php';
-use MercadoPago\Client\Preference\PreferenceClient;
-use MercadoPago\MercadoPago;
-use MercadoPago\MercadoPagoConfig;
+require __DIR__ . '/vendor/autoload.php';
 
-MercadoPagoConfig::setAccessToken("TEST-5620071132151801-110811-21bf02f64693ed4a0a12cea3a4994cd0-241483663");
+use MercadoPago\Client\Preference\MercadoPagoItem;
+use MercadoPago\MercadoPagoPreference;
+use MercadoPago\SDK;
+use MercadoPago\MercadoPagoPayer;
 
-$client = new PreferenceClient();
-$preference = $client->create([
-    "items"=> [
-        [
-            "title" => "Producto 1",
-            "quantity" => 1,
-            "currency_id" => "CLP",
-            "unit_price" => 13900
-        ]
-    ],
-    "back_urls" => [
-        "success" => "http://localhost/definitivo/captura.php",
-        "failure" => "http://localhost/definitivo/fallo.php",
-    ],
-    "auto_return" => "approved",
-    "binary_mode" => true
-]);
+          // Cria um objeto de preferência
+$preference = new MercadoPagoPreference();
 
-$preferenceId = $preference->id;
+$item = new MercadoPagoItem();
+// Set item details
+$preference->items = array($item);
 
- // Aquí deberías acceder directamente al atributo 'id' que contiene el ID de la preferencia        
+$payer = new MercadoPagoPayer();
+// Set payer details
+$preference->payer = $payer;
+
+$back_urls = array(
+    'success' => 'https://www.success.com',
+    'failure' => 'http://www.failure.com',
+    'pending' => 'http://www.pending.com'
+);
+$preference->back_urls = $back_urls;
+
+
+$preference->notification_url = 'https://www.your-site.com/ipn';
+$preference->statement_descriptor = 'MEUNEGOCIO';
+$preference->external_reference = 'Reference_1234';
+$preference->expires = true;
+$preference->expiration_date_from = '2016-02-01T12:00:00.000-04:00';
+$preference->expiration_date_to = '2016-02-28T12:00:00.000-04:00';
+    
+$preference->save();
+
 ?>
 
 

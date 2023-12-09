@@ -26,14 +26,12 @@ if ($productos != null) {
 
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="./css/estilos.css">
     <title>JoseGasam-inicio</title>
 
@@ -42,85 +40,82 @@ if ($productos != null) {
             background:linear-gradient(to right, #fbff02, #ff8001);
         
         }
+
     </style>
- 
 </head>
 <body>
-    <?php include 'menu.php';?>
-
+<?php include 'menu.php';?>
+<br>
     <main> 
-        <div class="container">   
-           
-            
+        <div class="container">
 
-                <div class="row">
-                    <div class="col-6">
-                        <h1>Ganancias</h1>
-                        <br>
-                    </div>
-
-                <div class="col-6">
-                    <div class="table-responsive">
-                        <table class="table">
+            <div class="row">
+                <div class="col">
+                </div>
+            </div> 
+            <div class="row">
+                <div class="col">
+                    <table class="table ">
+                        <tbody>
                             <thead>
                                 <tr>
-                                    <th>Producto</th>
                                     <th>Cantidad</th>
-                                    <th>Subtotal</th>
-                                    <th>Ganancia</th>
-                                </tr>                    
+                                    <th>Producto</th>
+                                    <th>Total del producto</th>
+                                </tr>
                             </thead>
-                            <tbody>
+                                <tr>
                                 <?php if ($lista_carrito == null) {
                                     echo '<tr><td colspan="5" class = "text-center"><b>Lista vacia </b></td></tr>';
                                 } else {
                                     $total = 0;
                                     foreach ($lista_carrito as $producto) {
+                                        $longitud = 10; // Puedes ajustar la longitud según tus necesidades
+                                        $bytes_aleatorios = random_bytes($longitud);
+                                        $codigo_aleatorio = bin2hex($bytes_aleatorios);
                                         $_id = $producto['id'];
                                         $nombre = $producto['nombre'];
                                         $precio = $producto['precio'];
                                         $cantidad = $producto['cantidad'];
                                         $subtotal = $cantidad * $precio;
                                         $total +=$subtotal ;
-                                        $ganancia = $cantidad*3000;
                                     ?>                           
                                 <tr>
                                     <td>
-                                        <?php echo $nombre?>
+                                    <div id="cantidad_<?php echo $_id; ?>" name="cantidad[]"><?php echo $cantidad; ?></div>
+                                        
                                     </td>
 
                                     <td>    
-                                                         
-                                        <div id="cantidad_<?php echo $_id; ?>" name="cantidad[]"><?php echo $cantidad; ?></div>
+                                        <?php echo $nombre?>              
                                     </td>
-
+                                        
                                     <td>
                                         <div id="subtotal_<?php echo $_id; ?>" name="subtotal[]"><?php echo MONEDA .$subtotal; ?></div>
-                                    </td>
-                                    <td>
-                                        <div id="ganancia_<?php echo $_id; ?>" name="ganancia[]"><?php echo MONEDA .$ganancia; ?></div>
                                     </td>
 
                                 </tr>
                                 
                             
                                 <?php } ?>
-                                    </tr>
-                            </tbody>
-                        <?php } ?>
-                        </table>
-                    </div>              
-                    </div>
-                </div>    
-            </div>
-        </div>    
+                                </tr>
+
+                        </tbody>
+                    </table>
+
+                    <thead>
+                            <tr>
+                                <b>Comprobante de compra:</b><?php echo $codigo_aleatorio;?><br>
+                                <b>Fecha:</b><?php date_default_timezone_set('America/Santiago');echo "". date("d/m/Y");?><br>
+                                <b>Hora:</b><?php echo "". date("h:i:sa");?><br>
+                                <b>Total:</b><?php echo MONEDA.$total;?><br>
+                                <b>Tiempo estimado de entrega: 15-20 minutos</b><br>
+                            </tr>
+                        </thead>
+                </div>
+                <?php } ?>
+        </div>
     </main>
-        <!-- Modal -->
-      
-</body>
-      
-</body>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     
-    
+</body>
 </html>

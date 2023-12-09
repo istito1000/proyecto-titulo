@@ -61,6 +61,8 @@ $preferenceId = $preference->id;
 ?>
 
 
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -69,6 +71,7 @@ $preferenceId = $preference->id;
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="./css/estilos.css">
+
     <title>JoseGasam-inicio</title>
 
     <style>
@@ -160,6 +163,7 @@ $preferenceId = $preference->id;
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="https://www.paypal.com/sdk/js?client-id=<?php echo CLIENTE_ID; ?>&currency=<?php echo CURRENCY; ?> "></script>      
     <script src="https://sdk.mercadopago.com/js/v2"></script>  
+    <script src="https://www.mercadopago.com/v2/security.js" view="home"></script>
     <script>
         paypal.Buttons({
             style: {
@@ -220,6 +224,8 @@ $preferenceId = $preference->id;
         });
 
     </script>
+
+
     
     
 </html>
