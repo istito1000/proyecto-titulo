@@ -65,9 +65,9 @@ if(!empty($_POST)){
             <div class="col bg-white p-5 rounded-end">
                     
                 <h2 class="fw-bold text-center pt-5 mb-5">Bienvenido</h2> 
-                <?php mostrarMensajes($errors);  ?> 
-                <form class="formulario" action="login.php" method="POST">
                 
+                <form class="formulario" action="login.php" method="POST">
+                <?php mostrarMensajes($errors);  ?>
                     <input type="hidden" name="proceso" value ="<?php echo $proceso;  ?> " >
                     <div class="mb-4">
                         <label for="usuario"  class="form-label">Usuario:</label>

@@ -2,10 +2,18 @@
 
 require 'config/config.php';
 require 'config/database.php';
-require 'clases/clienteFunciones.php';
-
+require 'clasesA/clienteFunciones.php';
 $db = new Database();
 $con = $db->conectar();
+
+
+
+/*$password = password_hash('admin',PASSWORD_DEFAULT);
+$sql = "INSERT INTO admin (usuario, contraseña,nombre,correo,activo,fecha_alta) VALUES ('admin','$password','Administrador','titokacique1.0@gmail.com','1',NOW())";
+$con->query($sql);*/
+
+
+
 
 $proceso = isset($_GET['pago']) ? 'pago' :'login';
 
@@ -90,7 +98,6 @@ if(!empty($_POST)){
 
 
                     <div class="my-3">
-                        <span>¿ No tienes cuenta? <a href="registro.php">Registrate</a></span>
                         <br>
                         <span> <a href="#">Recuperar Password</a></span>
                     </div>

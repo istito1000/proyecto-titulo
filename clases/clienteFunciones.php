@@ -136,6 +136,19 @@ function login($usuario,$password,$con, $proceso){
             return "no activo";
         }    
     }
+
+    $sql = $con->prepare("SELECT id,usuario, contraseña,nombre FROM admin WHERE usuario LIKE ? AND activo=1 LIMIT 1");
+    $sql->execute([$usuario]);
+    if($row = $sql-> fetch(PDO::FETCH_ASSOC)){
+
+        if(password_verify($password,$row["contraseña"])){
+            $_SESSION['user_id'] = $row ['id'];
+            $_SESSION['user_name'] = $row ['nombre'];
+            $_SESSION['user_type'] = 'admin';
+            header('Location: http://localhost/Josegasam/admin/index.php');
+            exit;
+        }  
+}
     return 'incorrectos';   
 }
 

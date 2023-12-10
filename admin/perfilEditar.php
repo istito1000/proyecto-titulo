@@ -14,8 +14,7 @@ if (isset($_POST['actualizar'])) {
     $direccion = $_POST['direccion'];
     $correo = $_POST['correo'];
 
-    $sql = "UPDATE clientes SET nombre=:nombre, rut=:rut, telefono=:telefono, direccion=:direccion, correo=:correo WHERE id=:id";
-
+    $sql = "UPDATE admin SET usuario=:nombre, contraseña=:rut, nombre=:telefono, correo=:direccion, activo=:correo WHERE id=:id";
     try {
         $stmt = $con->prepare($sql);
         $stmt->bindParam(':nombre', $nombre);
