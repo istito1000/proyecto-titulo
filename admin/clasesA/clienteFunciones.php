@@ -114,25 +114,53 @@ function activarUsuario($id,$con){
     return $sql->execute([$id]);   
 }
 
-function login($usuario,$password,$con){
+function login($usuario,$password,$con, $proceso){
 
-    $sql = $con->prepare("SELECT id,usuario, contraseña,nombre FROM admin WHERE usuario LIKE ? AND activo=1 LIMIT 1");
+    $sql = $con->prepare("SELECT id,usuario, contraseña,id_cliente FROM usuarios WHERE usuario LIKE ? LIMIT 1");
     $sql->execute([$usuario]);
     
     if($row = $sql-> fetch(PDO::FETCH_ASSOC)){
-
+        if(esActivo($usuario,$con)){
             if(password_verify($password,$row["contraseña"])){
                 $_SESSION['user_id'] = $row ['id'];
-                $_SESSION['user_name'] = $row ['nombre'];
-                $_SESSION['user_type'] = 'admin';
-                header('Location: inicio.php');
+                $_SESSION['user_name'] = $row ['usuario'];
+                $_SESSION['user_cliente'] = $row ['id_cliente'];
+                if($proceso == 'pago'){
+                    header("Location:index.php");     
+                }else{
+                    header("Location:checkout.php");
+                }
                 exit;
-            }  
+            }
+        }else{
+            return "no activo";
+        }    
     }
+
+    $sql = $con->prepare("SELECT id,usuario, contraseña,nombre FROM admin WHERE usuario LIKE ? AND activo=1 LIMIT 1");
+    $sql->execute([$usuario]);
+    if($row = $sql-> fetch(PDO::FETCH_ASSOC)){
+
+        if(password_verify($password,$row["contraseña"])){
+            $_SESSION['user_id'] = $row ['id'];
+            $_SESSION['user_name'] = $row ['nombre'];
+            $_SESSION['user_type'] = 'admin';
+            header('Location: admin/index.php');
+            exit;
+        }  
+}
     return 'incorrectos';   
 }
 
-
+function esActivo($usuario,$con){
+    $sql = $con->prepare("SELECT activacion FROM usuarios WHERE usuario LIKE ? LIMIT 1");
+    $sql->execute([$usuario]);  
+    $row = $sql->fetch(PDO::FETCH_ASSOC);
+    if($row['activacion'] == 0){
+        return true;
+    }
+    return false;
+}
 
 ?>
 

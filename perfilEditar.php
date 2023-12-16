@@ -105,18 +105,20 @@ try {
                         <input type="email" id="correo" class="form-control" name="correo" value="<?php echo $cliente['correo']?>" requireda>
                         <span id="validaCorreo" class="text-danger" ></span>
                     </div>
+                    <br>
+                    <div class="d-flex justify-content-center align-items-center mb-6">
+                        <a href="index.php" class="btn btn-primary">Volver atrás</a>
+                    </div>
                 </form>   
                 <?php }?> 
             </div>
             <div class="col bg d-none d-lg-block col-md-5 col-lg-5 col-xl-6 rounded">
-
             </div>
-
 
         </div>
     </div>
 </main>
-
+     <?php include 'footer.php';?>
 
     
 </body>

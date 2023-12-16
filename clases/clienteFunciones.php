@@ -145,13 +145,12 @@ function login($usuario,$password,$con, $proceso){
             $_SESSION['user_id'] = $row ['id'];
             $_SESSION['user_name'] = $row ['nombre'];
             $_SESSION['user_type'] = 'admin';
-            header('Location: http://localhost/Josegasam/admin/index.php');
+            header('Location: admin/index.php');
             exit;
         }  
 }
     return 'incorrectos';   
 }
-
 function esActivo($usuario,$con){
     $sql = $con->prepare("SELECT activacion FROM usuarios WHERE usuario LIKE ? LIMIT 1");
     $sql->execute([$usuario]);  

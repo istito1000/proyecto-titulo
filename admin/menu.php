@@ -33,6 +33,7 @@
                         <ul class="dropdown-menu" aria-labelledby="btn_session">
                             <li><a class="dropdown-item" href="perfilEditar.php">Perfil</a></li>
                             <li><a class="dropdown-item" href="ganancias.php">Ganancias</a></li>
+                            <li><a class="dropdown-item" href="ventasTotales.php">Ventas</a></li>
                             <li><a class="dropdown-item" href="logout.php">Cerrar sesion</a></li>
                             
                         </ul>

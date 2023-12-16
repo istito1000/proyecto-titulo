@@ -77,7 +77,7 @@ if($id_transaccion == 0){
                                 <b>Comprobante de compra:</b><?php echo $id_transaccion;?><br>
                                 <b>Fecha:</b><?php date_default_timezone_set('America/Santiago');echo "". date("d/m/Y");?><br>
                                 <b>Hora:</b><?php echo "". date("h:i:sa");?><br>
-                                <b>Total:</b><?php echo MONEDA.$total;?><br>
+                                <b>Total:</b><?php echo MONEDA.number_format($total, 0, ',', '.');?><br>
                                 <b>Tiempo estimado de entrega: 15-20 minutos</b>
                                 <th>Cantidad</th>
                                 <th>Producto</th>
@@ -87,11 +87,12 @@ if($id_transaccion == 0){
 
                         <tbody>
                             <?php while($row_det = $sqlDet->fetch(PDO::FETCH_ASSOC)){
-                                $importe= $row_det['precio'];?>
+                                $importe= $row_det['precio'];
+                                $total_producto = $row_det['precio']* $row_det['cantidad'];?>
                                 <tr>
                                     <td><?php echo $row_det['cantidad'];?></td>
                                     <td><?php echo $row_det['nombre'];?></td>
-                                    <td><?php echo $row_det['precio']* $row_det['cantidad'];?></td>
+                                    <td><?php echo MONEDA.number_format($total_producto, 0, ',', '.');?></td>
                                 </tr>
                                 <?php } ?>
                         </tbody>
@@ -102,4 +103,5 @@ if($id_transaccion == 0){
     </main>
     
 </body>
+<?php include 'footer.php';?>
 </html>

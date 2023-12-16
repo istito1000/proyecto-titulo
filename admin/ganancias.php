@@ -143,7 +143,7 @@ try {
     
     <div class="row mt-4">
         <div class="col-12 text-center">
-            <h3>Total de Ganancias: <?php echo MONEDA . $resultado; ?></h3>
+            <h3>Total de Ganancias del mes: <?php echo MONEDA . $resultado; ?></h3>
         </div>
     </div>
 </div>

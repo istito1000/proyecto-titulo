@@ -93,9 +93,6 @@ $preferenceId = $preference->id;
                     <br>
                     <div id="paypal-button-container"></div>
                     <div id="wallet_container"></div>
-                    <div>
-                        <a class="btn btn-primary" style="width: 100%;" href="completadoEfectivo.php">Efectivo</a>
-                    </div>
                 </div>
 
                 <div class="col-6">
@@ -133,7 +130,7 @@ $preferenceId = $preference->id;
                                     </td>
 
                                     <td>
-                                        <div id="subtotal_<?php echo $_id; ?>" name="subtotal[]"><?php echo MONEDA .$subtotal; ?></div>
+                                        <div id="subtotal_<?php echo $_id; ?>" name="subtotal[]"><?php echo MONEDA.number_format($subtotal, 0, ',', '.'); ?></div>
                                     </td>
 
                                 </tr>
@@ -143,7 +140,7 @@ $preferenceId = $preference->id;
 
                                     <tr>
                                         <td colspan="5">
-                                            <p class="h3 text-end" id="total">Total:<?php echo MONEDA .$total; ?></p>
+                                            <p class="h3 text-end" id="total">Total:<?php echo MONEDA.number_format($total, 0, ',', '.'); ?></p>
                                         </td>
                                     </tr>
                             </tbody>
@@ -225,7 +222,6 @@ $preferenceId = $preference->id;
 
     </script>
 
-
-    
+     <?php include 'footer.php';?> 
     
 </html>

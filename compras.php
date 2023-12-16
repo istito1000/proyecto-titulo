@@ -4,14 +4,19 @@ require 'config/config.php';
 require 'config/database.php';
 require 'clases/clienteFunciones.php';
 
+
 $db = new Database();
 $con = $db->conectar();
 
-//print_r($_SESSION);
+
+$token = generarToken();
+$_SESSION['token'] = $token;
 $id_cliente = $_SESSION ['user_cliente'];
 
-$sql = $con->prepare("SELECT id_transaccion,fecha,status,total FROM compra WHERE id_cliente=? ORDER BY date(fecha) DESC");
+$sql = $con->prepare("SELECT id_transaccion,fecha,status,total,estado FROM compra WHERE id_cliente=? ORDER BY DATE(fecha) DESC");
 $sql ->execute([$id_cliente]);
+
+
 
 //session_destroy();
 
@@ -46,22 +51,34 @@ $sql ->execute([$id_cliente]);
     <div class="container">
         <br>
         <h4>Mis compras</h4>
+        <hr>
 
+        <?php while($row= $sql->fetch(PDO::FETCH_ASSOC)){?>
 
-        <div class="card mb-3">
-            <div class="card-header">
-                Venta1
+            <div class="card mb-3 border-primary">
+                <div class="card-header">
+                    <?php echo $row['fecha'];?>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Folio:<?php echo $row['id_transaccion'];?></h5>
+                    <p class="card-text">Total:<?php echo MONEDA.number_format($row['total'], 0, ',', '.'); ?></p>
+                    <p>Estado:<?php echo $row['estado'] ;?></p>
+                    
+                    <a href="detalle_compra.php?orden=<?php echo $row['id_transaccion'];?>&token=<?php echo $token;?>" class="btn btn-primary">Detalle de compra</a>
+                </div>
+            </div>
+            
+
+        <?php }?>
+        <div class="d-flex justify-content-center align-items-center">
+            <a href="index.php" class="btn btn-primary">Volver atrás</a>
         </div>
-        <div class="card-body">
-            <h5 class="card-title">Folio:</h5>
-            <p class="card-text">Total:</p>
-            <a href="#" class="btn btn-primary">Detalles</a>
-        </div>
-
+    </div>
+        
         
 </main>
     
 </body>
-
+<?php include 'footer.php';?>
 </html>
     

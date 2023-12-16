@@ -11,19 +11,19 @@ $datos = json_decode($json, true);
 //print_r($datos);    
 
 if(is_array($datos)) {
-    //$id_cliente = $_SESSION['user_cliente'];
-    //$sqlProd = $con->prepare("SELECT correo FROM clientes WHERE id=? AND status=1");
-    //$sqlProd->execute([$id_cliente]);
-    //$row_cliente = $sqlProd->fetch(PDO::FETCH_ASSOC);
+    $id_cliente = $_SESSION['user_cliente'];
+    $sqlProd = $con->prepare("SELECT correo FROM clientes WHERE id=? AND estatus=1");
+    $sqlProd->execute([$id_cliente]);
+    $row_cliente = $sqlProd->fetch(PDO::FETCH_ASSOC);
 
     $id_transaccion = $datos['detalles']['id']; 
     $total = $datos['detalles']['purchase_units'][0]['amount']['value'];
     $status = $datos['detalles']['status']; 
     $fecha = $datos['detalles']['update_time']; 
     $fecha_nueva = date('Y-m-d H:i:s' ,strtotime($fecha));
-    $email = $datos['detalles']['payer']['email_address']; 
-    //$email = $row_cliente['correo']; 
-    $id_cliente = $datos['detalles']['payer']['payer_id']; 
+    //$email = $datos['detalles']['payer']['email_address']; 
+    $email = $row_cliente['correo']; 
+    //$id_cliente = $datos['detalles']['payer']['payer_id']; 
     
     //$idTransaccion = $datos['detalles']['purchase_units'][0]['payments']['captures'][0]['id']; 
 
@@ -53,7 +53,7 @@ if(is_array($datos)) {
                 $sql_insert->execute([$id, $clave, $row_prod['nombre'], $precio, $cantidad,$ganancia,$ganancia_total]);
 
                 }
-                // Puedes manejar el error de otra forma, como lanzar una excepción o guardar un registro de error.
+                include './correo_enviar.php';
             }
             unset($_SESSION['carrito']);
         }

@@ -222,7 +222,8 @@ if(!empty($_POST)){
         }
     }
     </script>
-
+    
+     <?php include 'footer.php';?>
 </body>
 
 </html>

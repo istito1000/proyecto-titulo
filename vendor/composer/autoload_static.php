@@ -7,6 +7,10 @@ namespace Composer\Autoload;
 class ComposerStaticInit2f9e531557e6dd82eec42fefa1f874ed
 {
     public static $prefixLengthsPsr4 = array (
+        'P' => 
+        array (
+            'PHPMailer\\PHPMailer\\' => 20,
+        ),
         'M' => 
         array (
             'MercadoPago\\' => 12,
@@ -14,6 +18,10 @@ class ComposerStaticInit2f9e531557e6dd82eec42fefa1f874ed
     );
 
     public static $prefixDirsPsr4 = array (
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
+        ),
         'MercadoPago\\' => 
         array (
             0 => __DIR__ . '/..' . '/mercadopago/dx-php/src/MercadoPago',
@@ -22,9 +30,6 @@ class ComposerStaticInit2f9e531557e6dd82eec42fefa1f874ed
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'MP' => __DIR__ . '/..' . '/mercadopago/sdk/lib/mercadopago.php',
-        'MPRestClient' => __DIR__ . '/..' . '/mercadopago/sdk/lib/mercadopago.php',
-        'MercadoPagoException' => __DIR__ . '/..' . '/mercadopago/sdk/lib/mercadopago.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

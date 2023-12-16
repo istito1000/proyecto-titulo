@@ -26,7 +26,7 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="./css/estilos.css">
-    <title>JoseGasam-inicio</title>
+    <title>JoseGasam-Productos</title>
 
     <style>
         body{
@@ -52,7 +52,6 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
 <?php include 'menu.php';?>
-
     <main> 
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
@@ -71,7 +70,7 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
                         <img src="<?php echo $imagen; ?>">
                         <div class="card-body">
                             <h5 class="card-titulo"><?php echo $row['nombre']; ?></h5>              
-                            <p class="card-text">$<?php echo $row['precio']; ?></p>
+                            <p class="card-text"><?php echo MONEDA.number_format($row['precio'], 0, ',', '.'); ?></p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
                                     <a href="detalles.php?id=<?php echo $row['id'];?>&token=<?php 
@@ -109,7 +108,7 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
         }
     </script>
       
-
+     <?php include 'footer.php';?>
 </body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </html>
