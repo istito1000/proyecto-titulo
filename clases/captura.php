@@ -8,10 +8,11 @@ $con = $db->conectar();
 $json = file_get_contents('php://input');
 $datos = json_decode($json, true);  
 
-//print_r($datos);    
+print_r($datos);    
 
 if(is_array($datos)) {
     $id_cliente = $_SESSION['user_cliente'];
+    $nombre_usuario= $_SESSION['user_name'];
     $sqlProd = $con->prepare("SELECT correo FROM clientes WHERE id=? AND estatus=1");
     $sqlProd->execute([$id_cliente]);
     $row_cliente = $sqlProd->fetch(PDO::FETCH_ASSOC);
@@ -20,9 +21,11 @@ if(is_array($datos)) {
     $total = $datos['detalles']['purchase_units'][0]['amount']['value'];
     $status = $datos['detalles']['status']; 
     $fecha = $datos['detalles']['update_time']; 
-    $fecha_nueva = date('Y-m-d H:i:s' ,strtotime($fecha));
+    date_default_timezone_set('America/Santiago');
+    $fecha_nueva = date('Y-m-d H:i:s');
     //$email = $datos['detalles']['payer']['email_address']; 
     $email = $row_cliente['correo']; 
+
     //$id_cliente = $datos['detalles']['payer']['payer_id']; 
     
     //$idTransaccion = $datos['detalles']['purchase_units'][0]['payments']['captures'][0]['id']; 
@@ -30,7 +33,7 @@ if(is_array($datos)) {
     $sql = $con->prepare("INSERT INTO compra(id_transaccion, fecha, status,correo, id_cliente,total) 
     VALUES(?,?,?,?,?,?)");
 
-    $sql->execute([$id_transaccion,$fecha_nueva,$status,$email,$id_cliente,$total]);
+    $sql->execute([$id_transaccion,$fecha_nueva,$status,$email,$nombre_usuario,$total]);
     $id =$con->lastInsertId();
     
     if($id>0) { 
@@ -53,7 +56,6 @@ if(is_array($datos)) {
                 $sql_insert->execute([$id, $clave, $row_prod['nombre'], $precio, $cantidad,$ganancia,$ganancia_total]);
 
                 }
-                include './correo_enviar.php';
             }
             unset($_SESSION['carrito']);
         }

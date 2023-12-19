@@ -12,9 +12,15 @@ $con = $db->conectar();
 $token = generarToken();
 $_SESSION['token'] = $token;
 $id_cliente = $_SESSION ['user_cliente'];
+$id_cliente1 = $_SESSION ['user_name'];
+
 
 $sql = $con->prepare("SELECT id_transaccion,fecha,status,total,estado FROM compra WHERE id_cliente=? ORDER BY DATE(fecha) DESC");
 $sql ->execute([$id_cliente]);
+
+$sql1 = $con->prepare("SELECT id_transaccion,fecha,status,total,estado FROM compra WHERE id_cliente=? ORDER BY DATE(fecha) DESC");
+$sql1 ->execute([$id_cliente1]);
+
 
 
 
@@ -31,7 +37,7 @@ $sql ->execute([$id_cliente]);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro- JoseGasam</title>
+    <title>Compras- JoseGasam</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
 
@@ -70,6 +76,28 @@ $sql ->execute([$id_cliente]);
             
 
         <?php }?>
+
+        <?php while($row1= $sql1->fetch(PDO::FETCH_ASSOC)){?>
+
+        <div class="card mb-3 border-primary">
+            <div class="card-header">
+                <?php echo $row1['fecha'];?>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Folio:<?php echo $row1['id_transaccion'];?></h5>
+                <p class="card-text">Total:<?php echo MONEDA.number_format($row1['total'], 0, ',', '.'); ?></p>
+                <p>Estado:<?php echo $row1['estado'] ;?></p>
+                <h5>Pagado con tarjeta en el sistema.</h5>
+                
+                <a href="detalle_compra.php?orden=<?php echo $row1['id_transaccion'];?>&token=<?php echo $token;?>" class="btn btn-primary">Detalle de compra</a>
+            </div>
+        </div>
+
+
+        <?php }?>
+
+
+        
         <div class="d-flex justify-content-center align-items-center">
             <a href="index.php" class="btn btn-primary">Volver atrás</a>
         </div>

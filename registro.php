@@ -50,19 +50,21 @@ if(!empty($_POST)){
             $pass_hash = password_hash($password, PASSWORD_DEFAULT);
             $idUsuario = registraUsuario([$usuario,$pass_hash,$token,$id],$con);
 
-        }else{
-            $errors[] = 'error al registrar cliente2';
+            if ($idUsuario > 0) {
+                // Registro exitoso
+                $_SESSION['mensaje_registro'] = 'Registro exitoso. Bienvenido, ' . $nombre . '!';
+                
+                echo '<script>alert("Registro exitoso. Bienvenido, ' . $nombre . '!");</script>';
+                
+                // Redirige a otra página después de 2 segundos
+                echo '<script>setTimeout(function(){ window.location = "login.php"; }, 500);</script>';
+                exit();
+            } else {
+                $errors[] = 'Error al registrar usuario';
+            }
         }
-       
-
-        
-            
-        }else{
-            print_r($errors);
-        }
-
+    }
 }
-
 //session_destroy();
 
 //print_r($_SESSION);
@@ -95,13 +97,15 @@ if(!empty($_POST)){
 <body>
 <?php include 'menu.php';?>
 
+
 <main>
+        
     <div class="container w-75 bg-primary mt-5 rounded shadow">
         <div class="row align-items-stretch">
             <div class="col bg-white p-5 rounded">          
                 <h2 class="fw-bold text-center pt-5 mb-5">Registro de usuario</h2>    
                 <form class="formulario" action="registro.php" method="POST">
-                    <?php mostrarMensajes($errors);  ?>
+                <?php mostrarMensajes($errors);  ?>
                     <div class="mb-6">
                         <label for="nombre" class="form-label">Nombre:</label>
                         <input type="text" id="nombre" class="form-control" name="nombre" requireda>
@@ -148,9 +152,8 @@ if(!empty($_POST)){
        
                     <div class="d-grid">
                     <br>
-                        <button type="submit" href="./login.php" class="btn btn-primary" value="Registrar" name="registro">Registrar</button>
+                        <button type="submit" class="btn btn-primary" value="Registrar" name="registro">Registrar</button>
                     </div>
-
                 </form>    
             </div>
             <div class="col bg d-none d-lg-block col-md-5 col-lg-5 col-xl-6 rounded">

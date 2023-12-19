@@ -26,11 +26,14 @@ $rowCompra = $sqlCompra->fetch(PDO::FETCH_ASSOC);
 $idCompra = $rowCompra['id'];
 
 
+
 $fecha = new DateTime($rowCompra['fecha']);
 $fecha = $fecha->format('d/m/Y H:i:s');
 
 $sqlDetalle =$con->prepare("SELECT id, id_compra, nombre, precio, cantidad FROM detalle_compra WHERE id_compra=? ");
 $sqlDetalle->execute([$idCompra]);
+
+
 
 
 
@@ -94,8 +97,8 @@ $sqlDetalle->execute([$idCompra]);
                         </tr>
                         
                     </thead>
-                    <tbody>
-                        <?php while($row = $sqlDetalle->fetch(PDO::FETCH_ASSOC)){
+                    <tbody>                  
+                      <?php while($row = $sqlDetalle->fetch(PDO::FETCH_ASSOC)){
                             $precio = $row['precio'];
                             $cantidad = $row['cantidad'];
                             $subtotal = $precio * $cantidad;
@@ -109,7 +112,11 @@ $sqlDetalle->execute([$idCompra]);
 
                         <?php }?>
 
+
+
+
                     </tbody>
+                    
                 </table>
             </div>
             <div class="d-flex justify-content-center align-items-center">

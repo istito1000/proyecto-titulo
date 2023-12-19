@@ -20,7 +20,7 @@ function esEmail($email){
 
 
 function validaPassword($password,$repassword){
-    if(strcmp($password,$repassword) === 0) {
+        if(strcmp($password,$repassword) === 0) {
         return true;
     }
     return false;

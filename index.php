@@ -12,6 +12,7 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
 
 //session_destroy();
 
+
 //print_r($_SESSION);
 
 

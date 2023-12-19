@@ -1,14 +1,10 @@
 <?php
-
-// Incluye los archivos necesarios
 require_once 'config/config.php';
 require_once 'config/database.php';
+require_once 'config/gananciaVenta.php';
 
 // Crea una instancia de la Database class
 $db = new Database();
-
-// Incluye el archivo que contiene la SumaColumna class
-require_once 'config/gananciaVenta.php'; // Asegúrate de poner la ruta correcta
 
 // Crea una instancia de la SumaColumna class y pasa la instancia de Database como un argumento
 $sumaColumna = new SumaColumna($db);
@@ -27,10 +23,6 @@ if ($productos != null) {
 }
 
 $resultado = $sumaColumna->sumarColumna();
-
-// Imprime el resultado
-//echo "La suma de la columna es: " . $resultado;
-
 ?>
 
 <!DOCTYPE html>
@@ -40,9 +32,7 @@ $resultado = $sumaColumna->sumarColumna();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-
     <title>JoseGasam-inicio</title>
-
     <style>
         body {
             background: linear-gradient(to right, #fbff02, #ff8001);
@@ -51,18 +41,11 @@ $resultado = $sumaColumna->sumarColumna();
 </head>
 <body>
     <?php include 'menu.php';?>
-
     <main>
         <br>
         <div class="container">
-            <form method="post" action="">
-                <label for="fecha">Buscar por Fecha:</label>
-                <input type="date" name="fecha" id="fecha">
-                <input type="submit" value="Buscar">
-            </form>
-
-
             <?php
+            // Clase para mostrar datos de la tabla
             class MostrarDatosTabla
             {
                 private $db;
@@ -75,10 +58,12 @@ $resultado = $sumaColumna->sumarColumna();
                 public function mostrarDatosEnPagina($tabla, $fecha = null)
                 {
                     try {
-                        $sql = "SELECT * FROM $tabla";
+                        $sql = "SELECT compra.*, clientes.direccion, clientes.telefono
+                                FROM compra
+                                LEFT JOIN clientes ON compra.id_cliente = clientes.id";
 
                         if (!empty($fecha)) {
-                            $sql .= " WHERE fecha = :fecha"; // Reemplaza 'fecha_columna' con el nombre real de tu columna de fecha
+                            $sql .= " WHERE compra.fecha = :fecha";
                         }
 
                         $stmt = $this->db->prepare($sql);
@@ -93,8 +78,8 @@ $resultado = $sumaColumna->sumarColumna();
 
                         echo '<main>
                                 <div class="container">
-                                        <div class="col-12">
-                                            <div class="table-responsive">';
+                                    <div class="col-12">
+                                        <div class="table-responsive">';
 
                         if (!empty($resultados)) {
                             echo '<table class="table" border="1">';
@@ -102,6 +87,7 @@ $resultado = $sumaColumna->sumarColumna();
                             foreach ($resultados[0] as $columna => $valor) {
                                 echo '<th>' . $columna . '</th>';
                             }
+                            echo '<th>Acciones</th>'; // Nueva columna para acciones
                             echo '</tr>';
 
                             foreach ($resultados as $fila) {
@@ -109,6 +95,7 @@ $resultado = $sumaColumna->sumarColumna();
                                 foreach ($fila as $valor) {
                                     echo '<td>' . $valor . '</td>';
                                 }
+                                echo '<td><a href="editar.php?id=' . $fila['id'] . '">Editar</a></td>';
                                 echo '</tr>';
                             }
 
@@ -156,10 +143,6 @@ $resultado = $sumaColumna->sumarColumna();
     </div>
 </div>
 </main>
-      
 </body>
-      
-</body>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </html>
-

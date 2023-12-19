@@ -1,64 +1,100 @@
 <?php
-
 require 'config/config.php';
 require 'config/database.php';
 require 'vendor/autoload.php';
-
-use MercadoPago\Client\Preference\PreferenceClient;
-use MercadoPago\MercadoPago;
-use MercadoPago\MercadoPagoConfig;
-MercadoPagoConfig::setAccessToken("TEST-5620071132151801-110811-21bf02f64693ed4a0a12cea3a4994cd0-241483663");
-
+require 'clases/clienteFunciones.php';
 
 $db = new Database();
 $con = $db->conectar();
 
 $productos = isset($_SESSION['carrito']['productos']) ? $_SESSION['carrito']['productos'] : null;
 
-
 $lista_carrito = array();
 
-
 if ($productos != null) {
-    foreach ($productos as $clave=> $cantidad) {
-        $sql = $con->prepare("SELECT id,nombre,precio, $cantidad AS cantidad FROM productos WHERE id=? AND activo=1 ");
+    foreach ($productos as $clave => $cantidad) {
+        $sql = $con->prepare("SELECT id, nombre, precio FROM productos WHERE id=? AND activo=1 ");
         $sql->execute([$clave]);
-        $lista_carrito[] = $sql->fetch(PDO::FETCH_ASSOC);
-
-
+        $producto = $sql->fetch(PDO::FETCH_ASSOC);
+        $producto['cantidad'] = $cantidad;
+        $lista_carrito[] = $producto;
     }
-}else{
+} else {
     header("Location: index.php");
     exit;
-}   
+}
 
-
+// Después de calcular el total
 $total = 0;
 foreach ($lista_carrito as $producto) {
-    $_id = $producto['id'];
-    $nombre = $producto['nombre'];
     $precio = $producto['precio'];
     $cantidad = $producto['cantidad'];
     $subtotal = $cantidad * $precio;
-    $total +=$subtotal ;
-
-
+    $total += $subtotal;
 }
 
-$client = new PreferenceClient();
-$preference = $client->create([
-    "items"=> [
-        [
-            "title" => $nombre,
-            "quantity" => 1,        
-            "unit_price" => $total
-        ]
-    ],
-]);
+// Obtener datos del usuario
+$id_cliente = $_SESSION['user_cliente'];  // Asumo que 'user_id' es el campo que almacena el ID del cliente en la sesión
 
-$preferenceId = $preference->id;
+try {
+    // Obtener el correo del cliente desde la base de datos
+    $sqlCorreo = $con->prepare("SELECT correo FROM clientes WHERE id=?");
+    $sqlCorreo->execute([$id_cliente]);
+    $cliente = $sqlCorreo->fetch(PDO::FETCH_ASSOC);
 
+    if ($cliente) {
+        $correo = $cliente['correo'];
+        $id_transaccion = generarIdTransaccion();
+        date_default_timezone_set('America/Santiago');
+        $fecha = date('Y-m-d H:i:s');
+        $status = 'Pendiente';
+        $metodo_pago = 'Efectivo o tarjeta';  // Ajusta según tu lógica
+
+        // Insertar datos en la tabla compra
+        $sqlCompra = $con->prepare("INSERT INTO compra (id_transaccion, fecha, status, correo, id_cliente, total, metodo_pago) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $sqlCompra->execute([$id_transaccion, $fecha, $status, $correo, $id_cliente, $total, $metodo_pago]);
+
+        // Obtener el ID de la compra recién insertada
+        $id_compra = $con->lastInsertId();
+
+        // Iterar sobre los productos y agregar detalles a la tabla detalle_compra
+        foreach ($lista_carrito as $producto) {
+            $id_producto = $producto['id'];
+            $nombre = $producto['nombre'];
+            $precio_producto = $producto['precio'];
+            $cantidad_producto = $producto['cantidad'];
+
+            // Calcular ganancia (ajusta según tus necesidades)
+            $ganancia = 3000*$cantidad_producto; // Por ejemplo, una ganancia del 10%
+
+            // Calcular ganancia total
+
+            $ganancia_total_total = $ganancia ;
+
+            // Insertar datos en la tabla detalle_compra
+            $sqlDetalleCompra = $con->prepare("INSERT INTO detalle_compra (id_compra, id_producto, nombre, precio, cantidad, ganancia, ganancia_total) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $sqlDetalleCompra->execute([$id_compra, $id_producto, $nombre, $precio_producto, $cantidad_producto, $ganancia, $ganancia_total_total]);
+        }
+
+        // Limpiar la sesión del carrito
+
+    } else {
+        echo "No se pudo obtener el correo del usuario.";
+    }
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+}
+
+// Función para generar ID de transacción (ajusta según tus necesidades)
+function generarIdTransaccion()
+{
+    return 'GAS' . date('YmdHis') . rand(100, 999);
+}
 ?>
+
+
+
+
 
 
 
@@ -91,12 +127,10 @@ $preferenceId = $preference->id;
                     <h1>Metodos de pago</h1>
                     <br>
                     <div>
-                        <a class="btn btn-primary" style="width: 100%;" href="completadoEfectivo.php">Pago con tarjeta al recibir</a>
+                        <a class="btn btn-primary" style="width: 100%;" href="completadoEfectivo.php">Pago con tarjeta o efectivo al recibir</a>
                     </div>
-                    <br>
-                    <div>
-                        <a class="btn btn-success" style="width: 100%;" href="completadoEfectivo.php">Pago en efectivo al recibir</a>
-                    </div>
+
+
                 </div>
 
                 <div class="col-6">
@@ -147,6 +181,7 @@ $preferenceId = $preference->id;
                                         </td>
                                     </tr>
                             </tbody>
+                            
                         <?php } ?>
                         </table>
                     </div>              
